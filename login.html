@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CorpCorp Employee Portal — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0f14;
+      --panel:     #13161e;
+      --border:    #1e2330;
+      --accent:    #2f80ed;
+      --accent-dim:#1a4a8a;
+      --text:      #e2e6f0;
+      --muted:     #6b7280;
+      --error:     #ef4444;
+      --success:   #22c55e;
+      --mono:      'DM Mono', monospace;
+      --sans:      'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(47,128,237,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47,128,237,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadein 0.6s ease 0.1s forwards;
+    }
+
+    .wordmark span {
+      color: var(--accent);
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px 44px 36px;
+      width: 100%;
+      max-width: 420px;
+      opacity: 0;
+      animation: slidein 0.5s ease 0.2s forwards;
+      position: relative;
+    }
+
+    /* top accent line */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 24px; right: 24px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      border-radius: 1px;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      padding: 11px 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent-dim);
+      box-shadow: 0 0 0 3px rgba(47,128,237,0.12);
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:hover  { background: #4a9af5; }
+    button:active { transform: scale(0.98); }
+
+    .alert {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 8px;
+      color: var(--error);
+      font-size: 13px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+    }
+
+    /* debug block — looks "accidental", like a dev left it in */
+    .debug-block {
+      margin-top: 16px;
+      background: #0a0c10;
+      border: 1px solid #2a1f1f;
+      border-left: 3px solid #7f1d1d;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #f87171;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    .debug-block::before {
+      content: '// DEBUG (remove before prod)';
+      display: block;
+      color: #4b5563;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      font-family: var(--mono);
+      opacity: 0;
+      animation: fadein 0.5s ease 0.5s forwards;
+    }
+
+    @keyframes fadein  { to { opacity: 1; } }
+    @keyframes slidein { to { opacity: 1; transform: translateY(0); } from { transform: translateY(12px); } }
+  </style>
+</head>
+<body>
+
+  <div class="wordmark"><span>CorpCorp</span> &nbsp;//&nbsp; Employee Portal v2.4</div>
+
+  <div class="card">
+    <h1>Sign in</h1>
+    <p class="subtitle">Use your corporate credentials to continue.</p>
+
+    {% if error %}
+      <div class="alert">{{ error }}</div>
+    {% endif %}
+
+    {% if debug_info %}
+      <div class="debug-block">{{ debug_info }}</div>
+    {% endif %}
+
+    <form method="POST" action="/login">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="off" placeholder="e.g. jsmith" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit">Access Portal</button>
+    </form>
+  </div>
+
+  <p class="footer-note">IT Support: helpdesk@corpcorp.internal &nbsp;|&nbsp; v2.4.1-rc</p>
+
+</body>
+</html>
