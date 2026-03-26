@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: corp_portal
+      MYSQL_USER: webapp
+      MYSQL_PASSWORD: webapp_pass
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uwebapp", "-pwebapp_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: ./app
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: db
+      DB_USER: webapp
+      DB_PASS: webapp_pass
+      DB_NAME: corp_portal
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:
