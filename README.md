@@ -24,7 +24,7 @@ A deliberately vulnerable web application for SQL injection practice.
 ### Run
 
 ```bash
-git clone <your-repo-url>
+git clone CropCrop-ctf
 cd sqli-lab
 docker-compose up --build
 ```
