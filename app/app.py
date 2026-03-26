@@ -72,6 +72,47 @@ def dashboard():
     return render_template("dashboard.html", username=session["user"], role=session["role"])
 
 
+@app.route("/employees")
+def employees():
+    if "user" not in session:
+        return redirect(url_for("login"))
+    if session.get("role") != "admin":
+        return redirect(url_for("dashboard"))
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT users.id, users.username, users.email, users.department, users.role "
+        "FROM users ORDER BY users.id"
+    )
+    staff = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template("employees.html", staff=staff)
+
+
+@app.route("/employees/<int:uid>")
+def employee_detail(uid):
+    if "user" not in session:
+        return redirect(url_for("login"))
+    if session.get("role") != "admin":
+        return redirect(url_for("dashboard"))
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT users.username, users.email, users.department, users.role, "
+        "employee_records.salary, employee_records.ssn, employee_records.notes, employee_records.message "
+        "FROM users JOIN employee_records ON employee_records.user_id = users.id "
+        "WHERE users.id = %s",
+        (uid,)
+    )
+    record = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if not record:
+        return redirect(url_for("employees"))
+    return render_template("employee_detail.html", record=record)
+
+
 @app.route("/logout")
 def logout():
     session.clear()

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CorpCorp — Employee Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0f14;
+      --panel:     #13161e;
+      --border:    #1e2330;
+      --accent:    #2f80ed;
+      --text:      #e2e6f0;
+      --muted:     #6b7280;
+      --mono:      'DM Mono', monospace;
+      --sans:      'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding: 48px 24px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(47,128,237,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47,128,237,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .wrapper {
+      max-width: 760px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .wordmark span { color: var(--accent); }
+
+    a.back {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    a.back:hover { color: var(--text); }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: rgba(47,128,237,0.06);
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 14px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .role-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .role-admin    { background: rgba(239,68,68,0.1);  color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .role-manager  { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+    .role-employee { background: rgba(47,128,237,0.1); color: #60a5fa; border: 1px solid rgba(47,128,237,0.2); }
+
+    a.view-btn {
+      display: inline-block;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    a.view-btn:hover { color: var(--text); border-color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="topbar">
+      <div class="wordmark"><span>CorpCorp</span> &nbsp;//&nbsp; Admin</div>
+      <a class="back" href="/dashboard">&larr; Dashboard</a>
+    </div>
+
+    <h1>Employee Directory</h1>
+    <p class="subtitle">All registered staff. Click a record to view details and messages.</p>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Role</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for emp in staff %}
+          <tr>
+            <td style="color:var(--muted); font-family:var(--mono);">{{ emp.id }}</td>
+            <td>{{ emp.username }}</td>
+            <td style="color:var(--muted);">{{ emp.email }}</td>
+            <td>{{ emp.department }}</td>
+            <td>
+              <span class="role-badge role-{{ emp.role }}">{{ emp.role }}</span>
+            </td>
+            <td>
+              <a class="view-btn" href="/employees/{{ emp.id }}">View</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
